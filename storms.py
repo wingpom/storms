@@ -1,3 +1,4 @@
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import warnings
@@ -28,8 +29,8 @@ def line_plot(df_hurricane, df_tropical_storm, df_tropical_depression, df_tropic
     ax.plot(df_hurricane['year'], df_hurricane['n'], label='Hurricanes', color='skyblue')
 
     # Add axis title and subtitle
-    ax.set_title('Frequency of Different Types of Storms (2010-2022)', weight='heavy', fontsize=20, loc='left', color='#333333')
-    ax.set_ylabel('Frequency', weight='bold', color='#333333')
+    ax.set_title('Frequency of Different Types of Storms (2010-2022)', weight='heavy', fontsize=12, loc='left', color='#333333')
+    ax.set_ylabel('Frequency', weight='bold', fontsize=10, color='#333333')
 
     # Add grid with light grey color
     ax.yaxis.grid(True, color='#d7d7d7', linestyle=':', linewidth=0.5)
@@ -47,42 +48,46 @@ def line_plot(df_hurricane, df_tropical_storm, df_tropical_depression, df_tropic
     ax.spines['top'].set_visible(False)
 
     # Add the legend to the plot
-    fig.legend(labels=ax.get_legend_handles_labels()[1], loc='lower center', frameon=False, ncol=4)
+    fig.legend(fontsize=8, loc='lower center', frameon=False, ncol=4)
 
     plt.show()
 
-def lolipop_plot(df, df_hurricane, df_tropical_storm, df_tropical_depression, df_tropical_wave):
-
+def lolipop_plot(df):
+    
     # Sort the data by year
-    ordered_df_hurricane=df_hurricane.sort_values(by='year')
-    ordered_df_tropical_storm=df_tropical_storm.sort_values(by='year')
-    ordered_df_tropical_depression=df_tropical_depression.sort_values(by='year')
-    ordered_df_tropical_wave=df_tropical_wave.sort_values(by='year')
-   
+    ordered_dfs = {
+        'Hurricanes': df[df['status'] == 'hurricane'].sort_values(by='year'),
+        'Tropical Storms': df[df['status'] == 'tropical storm'].sort_values(by='year'),
+        'Tropical Depressions': df[df['status'] == 'tropical depression'].sort_values(by='year'),
+        'Tropical Waves': df[df['status'] == 'tropical wave'].sort_values(by='year')
+    }
+
     # Create a figure and axis
     fig, ax = plt.subplots()
 
+    # Define colors for each status
+    colors = {
+        'Hurricanes': 'skyblue',
+        'Tropical Storms': 'lightgreen',
+        'Tropical Depressions': 'coral',
+        'Tropical Waves': 'gold'
+    }
+
     # Create a stem plot with stems next to each other per year
     width = 0.2
-    ax.vlines(x=ordered_df_hurricane['year'] - width*1.5, ymin=0, ymax=ordered_df_hurricane['n'], color='skyblue', alpha=0.7, label='Hurricanes')
-    ax.vlines(x=ordered_df_tropical_storm['year'] - width*0.5, ymin=0, ymax=ordered_df_tropical_storm['n'], color='lightgreen', alpha=0.7, label='Tropical Storms')
-    ax.vlines(x=ordered_df_tropical_depression['year'] + width*0.5, ymin=0, ymax=ordered_df_tropical_depression['n'], color='coral', alpha=0.7, label='Tropical Depressions')
-    ax.vlines(x=ordered_df_tropical_wave['year'] + width*1.5, ymin=0, ymax=ordered_df_tropical_wave['n'], color='gold', alpha=0.7, label='Tropical Waves')
-
-    ax.scatter(ordered_df_hurricane['year'] - width*1.5, ordered_df_hurricane['n'], color='skyblue', alpha=1)
-    ax.scatter(ordered_df_tropical_storm['year'] - width*0.5, ordered_df_tropical_storm['n'], color='lightgreen', alpha=1)
-    ax.scatter(ordered_df_tropical_depression['year'] + width*0.5, ordered_df_tropical_depression['n'], color='coral', alpha=1)
-    ax.scatter(ordered_df_tropical_wave['year'] + width*1.5, ordered_df_tropical_wave['n'], color='gold', alpha=1)
+    for i, (label, ordered_df) in enumerate(ordered_dfs.items()):
+        ax.vlines(x=ordered_df['year'] + width * (i - 1.5), ymin=0, ymax=ordered_df['n'], color=colors[label], alpha=0.7, label=label)
+        ax.scatter(ordered_df['year'] + width * (i - 1.5), ordered_df['n'], color=colors[label], alpha=1, marker='o')
 
     # Add axis title and subtitle
-    ax.set_title('Frequency of Different Types of Storms (2010-2022)', weight='heavy', fontsize=20, loc='left', color='#333333')
-    ax.set_ylabel('Frequency', weight='bold', color='#333333')
+    ax.set_title('Frequency of Different Types of Storms (2010-2022)', weight='heavy', fontsize=12, loc='left', color='#333333')
+    ax.set_ylabel('Frequency', weight='bold', fontsize=10, color='#333333')
 
     # Add grid with light grey color
     ax.yaxis.grid(True, color='#d7d7d7', linestyle=':', linewidth=0.5)
 
     # Add the legend to the plot
-    fig.legend(labels=ax.get_legend_handles_labels()[1], loc='lower center', frameon=False, ncol=4)
+    fig.legend(loc='lower center', fontsize=8, frameon=False, ncol=4)
 
     # Set figure and axis face color
     fig.patch.set_facecolor('#f6f6f6')
@@ -109,4 +114,4 @@ df, df_hurricane, df_tropical_storm, df_tropical_depression, df_tropical_wave = 
 line_plot(df_hurricane, df_tropical_storm, df_tropical_depression, df_tropical_wave)
 
 # Call the function to draw lolipop plot
-lolipop_plot(df, df_hurricane, df_tropical_storm, df_tropical_depression, df_tropical_wave)
+lolipop_plot(df)
