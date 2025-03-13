@@ -37,4 +37,4 @@ To run the script, you need the following Python libraries:
 ## Output
 The script will generate a line graph displaying the frequency of different storm types (hurricanes, tropical storms, tropical depressions, and tropical waves) from 2010 to 2022.
 
-![Frequency of Different Types of Storms (2010-2022)](lineplot.png)
+![Frequency of Different Types of Storms (2010-2022)](lolipoppolt.png)
